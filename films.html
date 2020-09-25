@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Best movies</title>
+</head>
+<body>
+    <h1>Фильмы</h1>
+    <ul>
+        {% for movie in object_list %}
+        <li>{{movie.name}}</li>
+        {% endfor %}
+    </ul>
+
+</body>
+</html>
