@@ -1,3 +1,4 @@
+from constants import CODE_200, CODE_404
 from templator import render
 
 
@@ -12,24 +13,22 @@ class Request:
         self.data = data or {}
 
 
-def main_view(request: Request) -> Response:
+def main_view(request: Request):
     secret = request.data.get('secret', None)
     body = f'Main {secret}'
-    return Response('200 OK', [body.encode(encoding='utf-8')])
+    return CODE_200, body.encode(encoding='utf-8')
 
 
-def about_view(request: Request) -> Response:
-    return Response('200 OK', [b'<h1>About</h1>'])
+def about_view(request: Request):
+    return CODE_200, b'<h1>About</h1>'
 
 
-def authors_view(request: Request) -> Response:
-    page = render('authors.html', object_list=[{'name': 'Leo'}, {'name': 'Kate'}])
-    return Response('200 OK', [page.encode(encoding='utf-8')])
+def authors_view(request: Request):
+    return CODE_200, render('authors.html', object_list=[{'name': 'Leo'}, {'name': 'Kate'}])
 
 
-def movies_view(request: Request) -> Response:
-    page = render('films.html', object_list=[{'name': 'Green mile'}, {'name': 'Schindler list'}])
-    return Response('200 OK', [page.encode(encoding='utf-8')])
+def movies_view(request: Request):
+    return CODE_200, render('films.html', object_list=[{'name': 'Green mile'}, {'name': 'Schindler list'}])
 
 
 def url_edge_check(environ):
@@ -40,7 +39,7 @@ def url_edge_check(environ):
 
 
 def view_404(request: Request):
-    return Response('404 Not Found', [b'<h1>NOT FOUND</h1>'])
+    return CODE_404, b'<h1>NOT FOUND</h1>'
 
 
 def secret_middleware(request):
@@ -68,7 +67,11 @@ class Application:
 
         if url in self.urls:
             view = self.urls[url]
-            response = view(request)
+            code, page = view(request)
+            if type(page) != bytes:
+                response = Response(code, [page.encode(encoding='utf-8')])
+            else:
+                response = Response(code, [page])
         else:
             response = view_404(request)
         start_response(response.code, [('Content-Type', 'text/html')])
