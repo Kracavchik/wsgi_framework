@@ -1,5 +1,4 @@
 from views import *
-from request_methods import get_method
 
 urls = {
     '/': main_view,

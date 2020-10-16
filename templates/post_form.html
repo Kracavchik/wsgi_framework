@@ -1,10 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base.html"%}
+{% block title %}POST form{% endblock %}
+{% block content %}
     <form method="post">
       <label for="fname">First name:</label><br>
       <input type="text" id="fname" name="fname"><br>
@@ -14,5 +10,4 @@
       <input type="text" id="email" name="lname"><br>
         <button type="submit">Send</button>
     </form>
-</body>
-</html>
+{% endblock content %}
